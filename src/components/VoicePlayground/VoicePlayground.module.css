@@ -1,0 +1,609 @@
+/* ============================================================
+   VOICE PLAYGROUND
+   Two states: idle (dot grid + chips) | active (transcript + audio)
+   ============================================================ */
+
+/* ── Outer shell ────────────────────────────────────────────── */
+.playground {
+  position: relative;
+  width: 650px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  height: 580px;
+}
+
+/* Soft yellow ambient glow */
+.playground::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  pointer-events: none;
+  z-index: 0;
+  animation: glowPulse 5s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%,  100% { opacity: 0.6; }
+  50%        { opacity: 1;   }
+}
+
+/* All direct children sit above pseudo layers */
+.playground > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Dot grid sits in the background — must come AFTER > * to win specificity */
+.dotGrid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: auto;
+}
+
+/* ── IDLE STATE ──────────────────────────────────────────────── */
+.idleContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6);
+  padding: var(--space-6);
+}
+
+.idleLabel {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--weight-regular);
+  color: var(--color-text-muted);
+  text-align: center;
+  max-width: 100%;
+}
+
+.suggestionGroup {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+/* ── Ticker (single chip scrolling vertically) ──────────────── */
+.ticker {
+  height: 36px;
+  overflow: hidden;
+}
+
+.tickerTrack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  animation: tickerScroll 9s linear infinite;
+}
+
+@keyframes tickerScroll {
+  0%     { transform: translateY(0);      animation-timing-function: linear; }
+  27.78% { transform: translateY(0);      animation-timing-function: ease-in-out; }
+  33.33% { transform: translateY(-44px);  animation-timing-function: linear; }
+  61.11% { transform: translateY(-44px);  animation-timing-function: ease-in-out; }
+  66.67% { transform: translateY(-88px);  animation-timing-function: linear; }
+  94.44% { transform: translateY(-88px);  animation-timing-function: ease-in-out; }
+  100%   { transform: translateY(-132px); }
+}
+
+/* ── Pause ticker on hover ──────────────────────────────────── */
+.tickerPaused .tickerTrack {
+  animation-play-state: paused;
+}
+
+/* ── Expanded chip grid (on hover) ─────────────────────────── */
+.chipGrid {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+  z-index: 2;
+  /* wide enough to allow chips to sit side-by-side before wrapping */
+  max-width: 560px;
+}
+
+/* Each chip slides up from below with a stagger */
+.chipGrid > button {
+  opacity: 0;
+  animation: chipSlideIn 180ms ease-out forwards;
+}
+.chipGrid > button:nth-child(1) { animation-delay: 0ms;   }
+.chipGrid > button:nth-child(2) { animation-delay: 60ms;  }
+.chipGrid > button:nth-child(3) { animation-delay: 120ms; }
+
+@keyframes chipSlideIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* ── Follow-up chips in active transcript ───────────────────── */
+.followUpChips {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: var(--space-2) 0;
+  animation: fadeIn 200ms ease forwards;
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px var(--space-5);
+  height: 36px;
+  background: var(--color-bg-surface-1);
+  color: var(--color-text-muted);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--weight-regular);
+  white-space: nowrap;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition:
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    background var(--transition-fast);
+}
+
+.chip:hover {
+  border-color: var(--color-border-default);
+  color: var(--color-text-primary);
+}
+
+/* ── ACTIVE STATE ────────────────────────────────────────────── */
+.activeContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.transcript {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column-reverse; /* newest messages anchor at bottom, older grow upward */
+  padding: var(--space-3) 0;
+  scrollbar-width: none;
+  min-height: 0;
+}
+
+.transcript::-webkit-scrollbar { display: none; }
+
+.transcriptInner {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Gradient fade over the top of the transcript */
+.transcriptFade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: linear-gradient(to bottom, var(--color-bg-base) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ── Chat messages ──────────────────────────────────────────── */
+.messageRow {
+  display: flex;
+  width: 100%;
+  padding: var(--space-2) 0;
+}
+
+.messageRowUser  { justify-content: flex-end; }
+.messageRowAgent { justify-content: flex-start; }
+
+.bubbleUser {
+  background: var(--color-bg-surface-1);
+  padding: 5px var(--space-5);
+  height: 36px;
+  display: flex;
+  align-items: center;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--weight-regular);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.bubbleAgent {
+  background: var(--color-bg-base);
+  padding: 6px 0;
+  max-width: 450px;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--weight-regular);
+  color: var(--color-text-muted);
+  line-height: var(--leading-normal);
+}
+
+/* ── Typing dots (kept for edge-case fallback) ──────────────── */
+.typingDots {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  padding: 10px 11px;
+}
+
+.typingDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-text-dim);
+  animation: typingBounce 1.2s ease-in-out infinite;
+}
+
+.typingDot:nth-child(2) { animation-delay: 0.2s; }
+.typingDot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typingBounce {
+  0%, 60%, 100% { transform: translateY(0);   opacity: 0.4; }
+  30%            { transform: translateY(-6px); opacity: 1;   }
+}
+
+/* ── Partial STT bubble (building transcript) ───────────────── */
+/*
+  Looks like the user bubble but slightly dimmer while words
+  are still appearing — signals "in progress" without being distracting.
+*/
+.bubblePartial {
+  background: rgba(23, 23, 23, 0.6);
+  border: 1px solid rgba(71, 71, 71, 0.5);
+  padding: 5px var(--space-5);
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--weight-regular);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  /* Fade in the bubble itself so it doesn't pop */
+  animation: fadeIn 150ms ease forwards;
+}
+
+/* ── Blinking cursor ────────────────────────────────────────── */
+/*
+  Used in both the partial STT bubble (user) and the streaming
+  agent bubble. Thin vertical bar, blinks at 0.65s.
+*/
+.cursor {
+  display: inline-block;
+  width: 1.5px;
+  height: 0.9em;
+  background: currentColor;
+  margin-left: 1px;
+  vertical-align: text-bottom;
+  opacity: 0.7;
+  flex-shrink: 0;
+  animation: cursorBlink 0.65s step-end infinite;
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 0.7; }
+  50%       { opacity: 0;   }
+}
+
+/* ── Controls area ──────────────────────────────────────────── */
+.controls { flex-shrink: 0; width: 100%; }
+
+/* ── Latency cards ──────────────────────────────────────────── */
+.cards {
+  display: flex;
+  gap: var(--space-4);
+  padding: 0;
+  margin-bottom: var(--space-3);
+}
+
+.card {
+  flex: 1 0 0;
+  background: var(--color-bg-surface-2);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.cardLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-caption);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.cardValueRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.cardValue {
+  font-family: var(--font-sans);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-medium);
+  color: var(--color-accent-purple);
+  white-space: nowrap;
+}
+
+.cardCompare {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-pale);
+  text-align: right;
+  white-space: pre-line;
+  flex-shrink: 1;
+}
+
+.cardCompareDim { color: var(--color-text-faint); }
+
+/* ── Skeleton loading ───────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #1e1e1e 25%,
+    #2c2c2c 50%,
+    #1e1e1e 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+  border-radius: 2px;
+}
+
+@keyframes shimmer {
+  0%   { background-position:  200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeletonValue {
+  height: 26px;
+  width: 58px;
+}
+
+.skeletonCompare {
+  height: 30px;
+  width: 96px;
+  border-radius: 2px;
+}
+
+.skeletonGraph {
+  width: 100%;
+  height: 100%;
+}
+
+.cardGraph {
+  width: 100%;
+  height: 48px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.latencyGraphWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.cardGraph svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Graph animations */
+.latency-line {
+  stroke-dasharray: 240;
+  stroke-dashoffset: 240;
+  animation: drawLine 2s ease-out forwards;
+}
+
+.cost-line {
+  stroke-dasharray: 116;
+  stroke-dashoffset: 116;
+  animation: drawLine 2.5s ease-out forwards;
+}
+
+@keyframes drawLine {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ── Centered button row (idle CTA + active controls) ───────── */
+.centeredRow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--space-3);
+  width: 100%;
+  flex-shrink: 0;
+}
+
+/* ── Waveform bar strip ─────────────────────────────────────── */
+.waveformRow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--space-2);
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.waveformBars {
+  display: flex;
+  align-items: center;
+  gap: 2.086px;
+  /* Bars are vertically centred within this row */
+  height: 48px;
+}
+
+/* ── Single waveform bar ────────────────────────────────────── */
+.bar {
+  width: 2px;
+  border-radius: var(--radius-pill);
+  background: var(--color-text-dim);
+  flex-shrink: 0;
+  /* height is always driven by JS (direct style) in active mode,
+     and set to 2px by default in idle */
+  height: 2px;
+  transition: background var(--transition-fast);
+  will-change: height; /* hint to compositor */
+}
+
+/* CSS-animation fallback used when mic permission is denied */
+.barCss {
+  animation: waveAnim var(--dur, 0.8s) ease-in-out infinite alternate;
+}
+
+@keyframes waveAnim {
+  from { height: var(--h-min, 2px);  }
+  to   { height: var(--h-max, 32px); }
+}
+
+/* Active / purple indicator bar */
+.barPurple { background: var(--color-accent-purple-light); }
+
+/* Muted state: all bars collapse flat and dim */
+.barMuted {
+  background: var(--color-text-dim) !important;
+  height: 2px !important;
+  animation: none !important;
+  transition: height 200ms ease, background 200ms ease;
+}
+
+/* ── Control buttons ────────────────────────────────────────── */
+.controlBar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  flex-shrink: 0;
+}
+
+.ctrlBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2);
+  background: var(--color-bg-base);
+  border: 1px solid var(--color-border-default);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.ctrlBtn:hover { border-color: var(--color-border-subtle); color: var(--color-text-primary); }
+
+.ctrlBtnMuted { color: var(--color-text-dim); border-color: var(--color-text-dim); }
+
+.ctrlBtnEnd {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-5);
+  background: var(--color-bg-base);
+  border: 1px solid var(--color-border-default);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.ctrlBtnEnd svg { color: var(--color-accent-red); }
+
+.ctrlBtnEnd:hover { border-color: var(--color-accent-red); color: var(--color-accent-red); }
+
+/* ── "Talk to Moss" idle CTA ────────────────────────────────── */
+.talkBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-5);
+  height: 40px;
+  background: var(--color-bg-base);
+  border: 1px solid var(--color-border-default);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.talkBtn svg { color: var(--color-accent-purple-light); }
+
+.talkBtn:hover  { border-color: var(--color-accent-purple-light); background: rgba(255, 221, 0, 0.08); }
+.talkBtn:active { opacity: 0.8; }
+
+/* Mic icon pulse — used while mic is active */
+.micActive {
+  color: var(--color-accent-purple-light);
+  animation: micPulse 2s ease-in-out infinite;
+}
+
+@keyframes micPulse {
+  0%, 100% { opacity: 1;   }
+  50%       { opacity: 0.4; }
+}
+
+/* ── State transitions ──────────────────────────────────────── */
+.fadeIn {
+  animation: fadeIn 280ms ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+/* ── Mic permission denied banner ───────────────────────────── */
+.permissionNote {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: 4px var(--space-3);
+  opacity: 0.7;
+}

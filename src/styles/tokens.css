@@ -1,0 +1,91 @@
+/* ============================================================
+   MOSS DESIGN TOKENS
+   All primitive values live here as CSS custom properties.
+   To switch themes, swap :root for [data-theme="dark"] etc.
+   ============================================================ */
+
+:root {
+  /* ── Color: Background ─────────────────────────────────── */
+  --color-bg-base:       #0f0f0f;
+  --color-bg-surface-1:  #171717;   /* suggestion chips, user message bubbles */
+  --color-bg-surface-2:  #181818;   /* latency cards */
+  --color-bg-surface-3:  #191919;   /* code snippet bar */
+  --color-bg-elevated:   #2b2b2b;   /* secondary button fill */
+
+  /* ── Color: Border ──────────────────────────────────────── */
+  --color-border-default: #474747;
+  --color-border-subtle:  #949494;
+
+  /* ── Color: Text ────────────────────────────────────────── */
+  --color-text-primary:   #f5f5f5;
+  --color-text-secondary: #a1a1a1;
+  --color-text-muted:     #9a9a9a;
+  --color-text-dim:       #505050;
+  --color-text-pale:      #aaa;
+  --color-text-faint:     #8a8a8a;
+  --color-text-caption:   rgba(255, 255, 255, 0.63);
+
+  /* ── Color: Accent ──────────────────────────────────────── */
+  --color-accent-purple:       #FFE279;   /* primary CTA, active bar */
+  --color-accent-purple-light: #FFE279;   /* voice icon, "Talk to Moss" */
+  --color-accent-purple-pale:  #FFE279;   /* latency card values */
+  --color-accent-blue:         #85d3ff;   /* npm command highlight */
+  --color-accent-red:          #e84747;   /* end call indicator */
+
+  /* ── Typography: Font families ─────────────────────────── */
+  /*
+    Stack Sans Notch is a licensed display font used in the Figma design.
+    Map it to the custom variable — if unavailable the system stack applies.
+    Load it via @font-face in globals.css when the font file is present.
+  */
+  --font-display: 'Stack Sans Notch', 'Space Grotesk', var(--font-geist-sans), system-ui, sans-serif;
+  --font-sans:    var(--font-geist-sans), 'Inter', system-ui, sans-serif;
+  --font-mono:    var(--font-geist-mono), 'Fira Code', 'Courier New', monospace;
+
+  /* ── Typography: Size scale ─────────────────────────────── */
+  --text-xs:   12px;
+  --text-sm:   14px;
+  --text-base: 16px;
+  --text-lg:   20px;
+  --text-xl:   24px;
+  --text-2xl:  32px;
+  --text-3xl:  40px;
+
+  /* ── Typography: Line height ────────────────────────────── */
+  --leading-tight:  1.2;
+  --leading-normal: 1.5;
+
+  /* ── Typography: Weight ─────────────────────────────────── */
+  --weight-light:   300;
+  --weight-regular: 400;
+  --weight-medium:  500;
+
+  /* ── Spacing scale ──────────────────────────────────────── */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  10px;
+  --space-4:  12px;
+  --space-5:  16px;
+  --space-6:  20px;
+  --space-7:  24px;
+  --space-8:  32px;
+  --space-10: 48px;
+  --space-12: 64px;
+  --space-16: 96px;
+
+  /* ── Border radius ──────────────────────────────────────── */
+  --radius-pill: 9999px;
+
+  /* ── Layout ─────────────────────────────────────────────── */
+  --layout-max-width:  1512px;
+  --layout-padding-x:  96px;
+
+  /* ── Transition ─────────────────────────────────────────── */
+  --transition-fast:   120ms ease;
+  --transition-normal: 220ms ease;
+
+  /* ── Waveform ───────────────────────────────────────────── */
+  --waveform-bar-width: 2px;
+  --waveform-bar-color: var(--color-text-dim);
+  --waveform-bar-active-color: var(--color-accent-purple-light);
+}

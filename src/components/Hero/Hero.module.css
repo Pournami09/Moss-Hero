@@ -1,0 +1,26 @@
+.hero {
+  display: flex;
+  gap: var(--space-6); /* 20px */
+  align-items: flex-start;
+  padding: 0; /* Figma: py-[84px] */
+  width: 100%;
+  min-height: 580px;
+}
+
+/* Left column: fixed-width wrapper that gives HeroContent its space */
+.left {
+  display: flex;
+  align-items: flex-start;
+  width: 650px;
+  flex-shrink: 0;
+  /* Stretch to full height of the flex row */
+  align-self: stretch;
+}
+
+/* Right column: playground */
+.right {
+  flex: 1;
+  align-self: stretch;
+  display: flex;
+  align-items: flex-start;
+}

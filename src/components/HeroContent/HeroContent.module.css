@@ -1,0 +1,208 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  align-items: flex-start;
+  justify-content: end;
+  width: 100%;
+  max-width: 720px;
+  flex-shrink: 0;
+  gap: var(--space-6); /* 20px */ 
+}
+
+/* ── Top block: headline + sub + CTAs ─────────────────────── */
+.top {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12); /* 64px */
+  align-items: flex-start;
+  width: 100%;
+}
+
+.headlineGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8); /* 32px */
+  align-items: flex-start;
+  width: 100%;
+  max-width: 600px;
+}
+
+.headline {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);    /* 32px */
+  font-weight: var(--weight-light);
+  line-height: var(--leading-normal);
+  color: var(--color-text-primary);
+  font-style: normal;
+  width: 100%;
+  text-wrap: balance;
+}
+
+.subheadline {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);    /* 16px */
+  font-weight: var(--weight-light);
+  line-height: var(--leading-normal);
+  color: var(--color-text-secondary);
+  width: 100%;
+  text-wrap: balance;
+}
+
+/* ── CTAs ──────────────────────────────────────────────────── */
+.ctaGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6); /* 20px */
+  align-items: flex-start;
+}
+
+.buttonRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6); /* 20px */
+}
+
+.btnPrimary {
+  flex: 1 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4) var(--space-8); /* 12px 32px */
+  background: var(--color-accent-purple);
+  color: #010101;
+  font-family: var(--font-mono);
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border: none;
+  cursor: pointer;
+  transition: background var(--transition-fast), opacity var(--transition-fast);
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.btnPrimary:hover {
+  background: var(--color-accent-purple-light);
+}
+
+.btnPrimary:active {
+  opacity: 0.85;
+}
+
+.btnSecondary {
+  flex: 1 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4) var(--space-6); /* 12px 24px */
+  background: var(--color-bg-elevated);
+  color: #ffffff;
+  border: 1px solid var(--color-border-subtle);
+  font-family: var(--font-mono);
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.btnSecondary:hover {
+  border-color: var(--color-text-secondary);
+  background: #333;
+}
+
+/* ── npm install snippet ───────────────────────────────────── */
+.snippetWrap {
+  width: 100%;
+}
+
+.snippet {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-5); /* 16px */
+  background: var(--color-bg-surface-3);
+  overflow: hidden;
+  width: 100%;
+  gap: var(--space-3);
+}
+
+.snippetCode {
+  font-family: var(--font-mono);
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  white-space: nowrap;
+  line-height: var(--leading-normal);
+}
+
+.snippetNpm {
+  color: var(--color-accent-purple-light);
+}
+
+.snippetCmd {
+  color: var(--color-accent-blue);
+}
+
+.copyBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+  transition: color var(--transition-fast);
+}
+
+.copyBtn:hover {
+  color: var(--color-text-primary);
+}
+
+.copyBtnSuccess {
+  color: var(--color-accent-purple-light);
+}
+
+/* ── Bottom: backed by ────────────────────────────────────── */
+.backedBy {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+.backedByLabel {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--weight-regular);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.ycLogo {
+  height: 29px;
+  width: auto;
+  display: block;
+}
+
+/* ── Dashed yellow underline on headline phrase ───────────── */
+.underlineYellow {
+  display: inline-block;
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--color-accent-purple) 0px,
+    var(--color-accent-purple) 6px,    /* dash length */
+    transparent 6px,
+    transparent 12px                   /* gap between dashes */
+  );
+  background-position: 0 100%;
+  background-repeat: repeat-x;
+  background-size: 100% 2px;
+  padding-bottom: 6px;
+}

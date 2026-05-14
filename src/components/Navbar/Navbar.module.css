@@ -1,0 +1,120 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-5) 0;
+  position: relative;
+  width: 100%;
+  z-index: 100;
+  background-color: var(--color-bg-base)  /* solid background to cover content bleed during scroll */;
+}
+
+/* Full-width gradient fade that bleeds below the navbar */
+.navbar::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  height: 80px;
+  background: linear-gradient(to bottom, var(--color-bg-base) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* ── Logo ──────────────────────────────────────────────────── */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  flex-shrink: 0;
+}
+
+.logoMark {
+  width: 39px;
+  height: 36px;
+  flex-shrink: 0;
+  display: block;
+}
+
+.logoText {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);    /* 24px */
+  font-weight: var(--weight-light);
+  line-height: var(--leading-normal);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  font-style: normal;
+}
+
+/* ── Right side: nav + CTA ─────────────────────────────────── */
+.right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-10); /* 48px */
+  flex-shrink: 0;
+}
+
+/* ── Nav links ─────────────────────────────────────────────── */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-10); /* 48px */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav li {
+  list-style: none;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3) 0; /* 10px */
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--weight-light);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  transition: color var(--transition-fast);
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.navLink:hover {
+  color: var(--color-text-primary);
+}
+
+/* ── CTA button ────────────────────────────────────────────── */
+.ctaButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2) var(--space-4); /* 8px 12px */
+  background: var(--color-accent-purple);
+  color: #010101;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  cursor: pointer;
+  border: none;
+  transition: background var(--transition-fast), opacity var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.ctaButton:hover {
+  background: var(--color-accent-purple-light);
+}
+
+.ctaButton:active {
+  opacity: 0.85;
+}

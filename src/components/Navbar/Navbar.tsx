@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import styles from './Navbar.module.css';
 
 const NAV_LINKS = [
@@ -12,6 +13,8 @@ const NAV_LINKS = [
 ];
 
 export default function Navbar() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <nav className={styles.navbar} aria-label="Main navigation">
       {/* Logo */}
@@ -26,7 +29,7 @@ export default function Navbar() {
         <span className={styles.logoText}>Moss</span>
       </a>
 
-      {/* Right: nav links + CTA */}
+      {/* Desktop: nav links + CTA */}
       <div className={styles.right}>
         <ul className={styles.nav} role="list">
           {NAV_LINKS.map((link) => (
@@ -42,6 +45,46 @@ export default function Navbar() {
           Start free
         </a>
       </div>
+
+      {/* Mobile: hamburger toggle */}
+      <button
+        className={styles.menuButton}
+        onClick={() => setMenuOpen((v) => !v)}
+        aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+        aria-expanded={menuOpen}
+      >
+        <span
+          className={`${styles.hamburgerIcon} ${menuOpen ? styles.hamburgerOpen : ''}`}
+          aria-hidden="true"
+        >
+          <span />
+          <span />
+          <span />
+        </span>
+      </button>
+
+      {/* Mobile: dropdown menu */}
+      {menuOpen && (
+        <div className={styles.mobileMenu}>
+          {NAV_LINKS.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              className={styles.mobileNavLink}
+              onClick={() => setMenuOpen(false)}
+            >
+              {link.label}
+            </a>
+          ))}
+          <a
+            href="#start"
+            className={styles.mobileCta}
+            onClick={() => setMenuOpen(false)}
+          >
+            Start free
+          </a>
+        </div>
+      )}
     </nav>
   );
 }

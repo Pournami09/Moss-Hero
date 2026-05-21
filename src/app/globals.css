@@ -25,6 +25,8 @@ button {
 html {
   height: 100%;
   color-scheme: dark;
+  -webkit-text-size-adjust: 100%; /* prevent iOS from scaling text in landscape */
+  text-size-adjust: 100%;
 }
 
 html,

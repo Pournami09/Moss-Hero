@@ -18,3 +18,16 @@
   flex-direction: column;
   align-items: flex-start;
 }
+
+/* ── Responsive ───────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .inner {
+    padding: 0 var(--space-10); /* 48px */
+  }
+}
+
+@media (max-width: 768px) {
+  .inner {
+    padding: 0 var(--space-6); /* 20px */
+  }
+}

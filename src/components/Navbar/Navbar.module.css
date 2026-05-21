@@ -118,3 +118,126 @@
 .ctaButton:active {
   opacity: 0.85;
 }
+
+/* ── Mobile menu toggle ───────────────────────────────────────── */
+.menuButton {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-primary);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hamburgerIcon {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.hamburgerIcon span {
+  display: block;
+  width: 20px;
+  height: 1.5px;
+  background: currentColor;
+  border-radius: 1px;
+  transition: transform var(--transition-fast), opacity var(--transition-fast);
+}
+
+/* Hamburger → X animation */
+.hamburgerOpen span:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+
+.hamburgerOpen span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburgerOpen span:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
+
+.mobileMenu {
+  display: none;
+}
+
+/* ── Responsive: Tablet ───────────────────────────────────────── */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .right {
+    gap: var(--space-7); /* 24px instead of 48px */
+  }
+
+  .nav {
+    gap: var(--space-7); /* 24px instead of 48px */
+  }
+}
+
+/* ── Responsive: Mobile ───────────────────────────────────────── */
+@media (max-width: 768px) {
+  .right {
+    display: none;
+  }
+
+  .menuButton {
+    display: flex;
+    min-width: 44px;  /* WCAG 2.5.8 touch target */
+    min-height: 44px;
+  }
+
+  .mobileMenu {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--color-bg-base);
+    padding: var(--space-3) 0 var(--space-5);
+    gap: 0;
+    z-index: 110;
+    border-bottom: 1px solid var(--color-border-default);
+  }
+
+  .mobileNavLink {
+    display: flex;
+    align-items: center;
+    min-height: 44px; /* WCAG touch target */
+    padding: 0;
+    font-family: var(--font-sans);
+    font-size: var(--text-base); /* 16px — full-size for primary nav */
+    font-weight: var(--weight-light);
+    color: var(--color-text-secondary);
+    transition: color var(--transition-fast);
+  }
+
+  .mobileNavLink:hover {
+    color: var(--color-text-primary);
+  }
+
+  .mobileCta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px; /* WCAG touch target */
+    padding: var(--space-4) var(--space-5);
+    margin-top: var(--space-4);
+    background: var(--color-accent-purple);
+    color: #010101;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    cursor: pointer;
+    border: none;
+    transition: background var(--transition-fast);
+  }
+
+  .mobileCta:hover {
+    background: var(--color-accent-purple-light);
+  }
+}

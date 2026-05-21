@@ -206,3 +206,88 @@
   background-size: 100% 2px;
   padding-bottom: 6px;
 }
+
+/* ── Responsive ───────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .container {
+    max-width: 100%;
+  }
+
+  .headlineGroup {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    justify-content: flex-start; /* top-align instead of bottom-align */
+  }
+
+  .top {
+    gap: var(--space-8); /* 32px instead of 64px */
+    align-items: stretch; /* children fill full width */
+  }
+
+  .headlineGroup {
+    gap: var(--space-6); /* 20px instead of 32px */
+  }
+
+  .headline {
+    font-size: 26px;
+    line-height: 1.35; /* looser than 1.2 — readable over 2-3 wrapped lines */
+  }
+
+  .subheadline {
+    font-size: 15px; /* 15px not 14px — comfortable mobile body text */
+    line-height: 1.5;
+  }
+
+  .ctaGroup {
+    width: 100%;
+  }
+
+  .buttonRow {
+    flex-direction: column;
+    width: 100%;
+    gap: var(--space-3); /* 10px — tighter stacked gap */
+  }
+
+  .btnPrimary,
+  .btnSecondary {
+    flex: none;
+    width: 100%;
+    min-height: 44px; /* WCAG 2.5.8 — minimum touch target */
+    padding: var(--space-3) var(--space-6); /* 10px 24px */
+    font-size: var(--text-sm);
+  }
+
+  .snippetWrap {
+    width: 100%;
+  }
+
+  .snippet {
+    padding: var(--space-3) var(--space-4); /* 10px 12px — tighter */
+    overflow-x: auto; /* scroll instead of clip on narrow screens */
+    overflow-y: hidden;
+  }
+
+  .snippetCode {
+    font-size: var(--text-sm); /* 14px — monospace reads larger than proportional */
+  }
+
+  .copyBtn {
+    min-width: 44px;  /* WCAG touch target */
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .backedByLabel {
+    font-size: var(--text-sm);
+  }
+
+  .ycLogo {
+    height: 24px;
+  }
+}
